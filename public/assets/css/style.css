@@ -225,36 +225,50 @@ body {
     min-height: 100vh;
 }
 
-/* BARRA LATERAL (Sidebar en Blanco Puro y Borde Fino) */
+/* BARRA LATERAL (Sidebar - Premium Navy Dark Look & Feel) */
 .app-sidebar {
-    background-color: var(--color-sidebar);
-    border-right: 1px solid var(--color-border);
+    background-color: #0c214c; /* Azul corporativo oscuro idéntico al mockup */
     display: flex;
     flex-direction: column;
-    padding: 30px 20px;
+    padding: 30px 16px;
     justify-content: space-between;
 }
 
-.sidebar-header {
+/* Cabecera del Sidebar: Contenedor del Logo Centrado */
+.sidebar-brand-wrapper {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 40px;
-    padding-left: 8px;
+    text-align: center;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.sidebar-logo-icon {
-    width: 28px;
-    height: 28px;
-    color: var(--color-primary);
+.sidebar-logo-circle {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transition: var(--transition-smooth);
+}
+
+.sidebar-logo-circle:hover {
+    transform: scale(1.03) rotate(5deg);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .sidebar-logo-text {
     font-family: var(--font-heading);
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-weight: 800;
+    color: #ffffff;
+    margin-top: 15px;
     letter-spacing: -0.5px;
-    color: var(--color-primary);
 }
 
 .sidebar-nav ul {
@@ -265,7 +279,7 @@ body {
 }
 
 .nav-item {
-    border-radius: var(--border-radius-sm);
+    border-radius: 8px;
     transition: var(--transition-smooth);
 }
 
@@ -273,102 +287,87 @@ body {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 12px 14px;
-    color: var(--color-secondary);
+    padding: 11px 16px;
+    color: rgba(255, 255, 255, 0.75);
     text-decoration: none;
     font-size: 0.95rem;
-    font-weight: 600;
+    font-weight: 500;
     transition: var(--transition-smooth);
 }
 
 .nav-icon {
-    width: 20px;
-    height: 20px;
-    opacity: 0.8;
-    color: var(--color-secondary);
+    width: 18px;
+    height: 18px;
+    color: rgba(255, 255, 255, 0.75);
     transition: var(--transition-smooth);
 }
 
-/* Item Activo: Fondo azul suave con letras azul corporativo */
+/* Item Activo: Fondo azul brillante e intenso con letras blancas */
 .nav-item.active {
-    background-color: var(--color-primary-light);
+    background-color: #1d4ed8; /* Botón azul brillante idéntico al del mockup */
 }
 
 .nav-item.active .nav-link {
-    color: var(--color-primary);
+    color: #ffffff;
+    font-weight: 600;
 }
 
 .nav-item.active .nav-icon {
-    color: var(--color-primary);
-    opacity: 1;
+    color: #ffffff;
 }
 
 /* Hover de Items */
 .nav-item:not(.active):hover {
-    background-color: #f8fafc;
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 .nav-item:not(.active):hover .nav-link {
-    color: var(--color-text-dark);
+    color: #ffffff;
+}
+
+.nav-item:not(.active):hover .nav-icon {
+    color: #ffffff;
 }
 
 /* Sección de Usuario del Sidebar */
 .sidebar-user {
     margin-top: auto;
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
     padding-top: 20px;
     display: flex;
+    flex-direction: column;
     align-items: center;
+    text-align: center;
     gap: 12px;
 }
 
-.user-avatar {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    border: 2px solid var(--color-primary-light);
-    object-fit: cover;
-}
-
-.user-info {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    overflow: hidden;
-}
-
-.user-name {
+.user-info-only {
+    color: #ffffff;
     font-size: 0.88rem;
-    font-weight: 700;
-    color: var(--color-text-dark);
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-
-.user-role {
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
     font-weight: 500;
+    opacity: 0.9;
 }
 
-.btn-logout-icon {
-    color: var(--color-text-muted);
-    opacity: 0.7;
-    transition: var(--transition-smooth);
-    display: flex;
+.btn-logout-link {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
+    color: #e11d48; /* Rojo de salida suave */
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: var(--transition-smooth);
+    width: 100%;
 }
 
-.btn-logout-icon:hover {
-    color: var(--color-danger);
-    opacity: 1;
+.btn-logout-link:hover {
+    color: #f43f5e;
 }
 
-.logout-icon {
-    width: 20px;
-    height: 20px;
+.logout-mini-icon {
+    width: 16px;
+    height: 16px;
 }
 
 /* CONTENIDO PRINCIPAL (Fondo Gris Suave) */

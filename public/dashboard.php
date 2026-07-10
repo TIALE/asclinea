@@ -53,59 +53,122 @@ if (empty($userFoto)) {
 <body class="dashboard-body">
     <!-- Contenedor del Layout Principal -->
     <div class="app-layout">
-        <!-- BARRA LATERAL (Sidebar Navigation) -->
+        <!-- BARRA LATERAL (Sidebar Navigation - Look & Feel Dual Dark-Sidebar) -->
         <aside class="app-sidebar">
-            <div class="sidebar-header">
-                <!-- Logo SVG Premium de Turbina y Herramientas (AleSearchTool) -->
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="sidebar-logo-icon" style="width: 24px; height: 24px; fill: none;">
-                    <defs>
-                        <radialGradient id="side-metal-grad" cx="50%" cy="50%" r="50%">
-                            <stop offset="0%" stop-color="#f0f3f8"/>
-                            <stop offset="100%" stop-color="#7a8da5"/>
-                        </radialGradient>
-                    </defs>
-                    <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="6" />
-                    <circle cx="50" cy="50" r="38" fill="#101e3d" />
-                    <!-- Aspas de la Turbina -->
-                    <g stroke="currentColor" stroke-width="1" fill="url(#side-metal-grad)">
-                        <path d="M50,50 L50,15 C54,15 56,25 50,50 Z" />
-                        <path d="M50,50 L75,25 C78,28 72,36 50,50 Z" />
-                        <path d="M50,50 L85,50 C85,54 75,56 50,50 Z" />
-                        <path d="M50,50 L75,75 C72,78 64,72 50,50 Z" />
-                        <path d="M50,50 L50,85 C46,85 44,75 50,50 Z" />
-                        <path d="M50,50 L25,75 C22,72 28,64 50,50 Z" />
-                        <path d="M50,50 L15,50 C15,46 25,44 50,50 Z" />
-                        <path d="M50,50 L25,25 C28,22 36,28 50,50 Z" />
-                    </g>
-                    <circle cx="50" cy="50" r="10" fill="url(#side-metal-grad)" stroke="currentColor" stroke-width="1.5" />
-                </svg>
-                <span class="sidebar-logo-text">AleSearchTool</span>
+            <div class="sidebar-brand-wrapper">
+                <!-- Logotipo Circular Premium de Turbina y Herramientas (AleSearchTool) -->
+                <div class="sidebar-logo-circle">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="width: 70px; height: 70px;">
+                        <defs>
+                            <radialGradient id="side-metal-grad" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#f0f3f8"/>
+                                <stop offset="50%" stop-color="#b8c4d9"/>
+                                <stop offset="100%" stop-color="#7a8da5"/>
+                            </radialGradient>
+                            <linearGradient id="side-wrench-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#ffffff"/>
+                                <stop offset="100%" stop-color="#808e9b"/>
+                            </linearGradient>
+                            <linearGradient id="side-handle-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#e74c3c"/>
+                                <stop offset="50%" stop-color="#c0392b"/>
+                                <stop offset="100%" stop-color="#962d22"/>
+                            </linearGradient>
+                        </defs>
+                        
+                        <!-- Círculo Exterior / Carcasa de la Turbina -->
+                        <circle cx="50" cy="50" r="42" fill="none" stroke="url(#side-metal-grad)" stroke-width="4" />
+                        <circle cx="50" cy="50" r="38" fill="#101e3d" stroke="#2c3e50" stroke-width="1" />
+                        
+                        <!-- Aspas de la Turbina -->
+                        <g stroke="#2c3e50" stroke-width="0.5" fill="url(#side-metal-grad)">
+                            <path d="M50,50 L50,15 C54,15 56,25 50,50 Z" opacity="0.9" />
+                            <path d="M50,50 L75,25 C78,28 72,36 50,50 Z" opacity="0.9" />
+                            <path d="M50,50 L85,50 C85,54 75,56 50,50 Z" opacity="0.9" />
+                            <path d="M50,50 L75,75 C72,78 64,72 50,50 Z" opacity="0.9" />
+                            <path d="M50,50 L50,85 C46,85 44,75 50,50 Z" opacity="0.9" />
+                            <path d="M50,50 L25,75 C22,72 28,64 50,50 Z" opacity="0.9" />
+                            <path d="M50,50 L15,50 C15,46 25,44 50,50 Z" opacity="0.9" />
+                            <path d="M50,50 L25,25 C28,22 36,28 50,50 Z" opacity="0.9" />
+                        </g>
+                        
+                        <!-- Núcleo de la Turbina -->
+                        <circle cx="50" cy="50" r="10" fill="url(#side-metal-grad)" stroke="#1a252f" stroke-width="1.5" />
+                        <circle cx="50" cy="50" r="4" fill="#1a252f" />
+                        
+                        <!-- Herramientas Cruzadas en Frente -->
+                        <g>
+                            <!-- Llave Inglesa -->
+                            <g transform="translate(50,50) rotate(-45) translate(-50,-50)">
+                                <rect x="47" y="20" width="6" height="60" rx="2" fill="url(#side-wrench-grad)" stroke="#57606f" stroke-width="1"/>
+                                <circle cx="50" cy="20" r="9" fill="url(#side-wrench-grad)" stroke="#57606f" stroke-width="1"/>
+                                <polygon points="45,11 55,11 55,21 45,21" fill="#101e3d"/>
+                                <circle cx="50" cy="80" r="7" fill="url(#side-wrench-grad)" stroke="#57606f" stroke-width="1"/>
+                                <circle cx="50" cy="80" r="3.5" fill="#101e3d"/>
+                            </g>
+                            
+                            <!-- Destornillador -->
+                            <g transform="translate(50,50) rotate(45) translate(-50,-50)">
+                                <rect x="48.5" y="15" width="3" height="45" fill="url(#side-wrench-grad)" stroke="#57606f" stroke-width="0.5"/>
+                                <polygon points="47,15 53,15 51,11 49,11" fill="url(#side-wrench-grad)"/>
+                                <rect x="45" y="55" width="10" height="30" rx="3" fill="url(#side-handle-grad)" stroke="#78281f" stroke-width="1"/>
+                                <rect x="48" y="55" width="4" height="30" fill="#2c3e50" opacity="0.3"/>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+                <h2 class="sidebar-logo-text">AleSearchTool</h2>
             </div>
             
             <nav class="sidebar-nav">
                 <ul>
                     <li class="nav-item active">
                         <a href="dashboard.php" class="nav-link">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-icon"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
-                            <span>Panel de Control</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-icon">
+                                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                <polyline points="9 22 9 12 15 12 15 22"/>
+                            </svg>
+                            <span>Dashboard</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-icon"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-                            <span>Gestión de Fallas</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-icon">
+                                <path d="M12 20h9"/>
+                                <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+                            </svg>
+                            <span>Registrar Falla</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-icon"><path d="M4 19.5v-15A2.5 2.15 0 0 1 6.5 2H20v20H6.5a2.5 2.15 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10"/></svg>
-                            <span>Conocimiento Técnico</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-icon">
+                                <circle cx="11" cy="11" r="8"/>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                            <span>Consultar Fallas</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#" class="nav-link">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-icon"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-1.1 0-2 .9-2 2v7c0 .6.4 1 1 1h3m12 0a3 3 0 1 1-6 0m6 0a3 3 0 1 0-6 0m-4 0h4m-4 0a3 3 0 1 1-6 0m6 0a3 3 0 1 0-6 0m-1 0H3"/></svg>
-                            <span>Flota de Vehículos</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-icon">
+                                <path d="M12 8V4H8"/>
+                                <rect width="16" height="12" x="4" y="8" rx="2"/>
+                                <path d="M2 14h2"/>
+                                <path d="M20 14h2"/>
+                                <path d="M15 13v2"/>
+                                <path d="M9 13v2"/>
+                            </svg>
+                            <span>Asistente IA</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-icon">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                            </svg>
+                            <span>Administración</span>
                         </a>
                     </li>
                 </ul>
@@ -113,17 +176,15 @@ if (empty($userFoto)) {
 
             <!-- PERFIL DE USUARIO EN SIDEBAR -->
             <div class="sidebar-user">
-                <img src="<?php echo htmlspecialchars($userFoto, ENT_QUOTES, 'UTF-8'); ?>" alt="Avatar" class="user-avatar" referrerpolicy="no-referrer">
-                <div class="user-info">
+                <div class="user-info-only">
                     <span class="user-name"><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
-                    <span class="user-role">Personal Técnico</span>
                 </div>
-                <a href="index.php?action=logout" class="btn-logout-icon" title="Cerrar sesión">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="logout-icon">
+                <a href="index.php?action=logout" class="btn-logout-link" title="Cerrar sesión">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="logout-mini-icon">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
                         <polyline points="16 17 21 12 16 7"/>
                         <line x1="21" y1="12" x2="9" y2="12"/>
-                    </svg>
+                    </svg> Cerrar Sesión
                 </a>
             </div>
         </aside>
