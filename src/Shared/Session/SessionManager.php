@@ -31,7 +31,7 @@ class SessionManager
             'domain'   => '',                      // Dominio actual
             'secure'   => $isSecure,               // OBLIGATORIO en producción: Solo transmitir sobre HTTPS
             'httponly' => true,                   // OBLIGATORIO: Ocultar cookie a Javascript (Previene XSS)
-            'samesite' => 'Strict'                 // OBLIGATORIO: Impedir el envío de la cookie en peticiones externas (Previene CSRF)
+            'samesite' => 'Lax'                    // OBLIGATORIO para OAuth: Permite conservar sesión tras retorno de Google
         ]);
 
         // Evitar el rastreo de sesión en URLs
