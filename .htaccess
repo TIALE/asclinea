@@ -1,0 +1,22 @@
+# -------------------------------------------------------------
+# PROTECCIÓN Y RUTEO FLEETCARE TECH (.htaccess)
+# -------------------------------------------------------------
+
+# 1. Activar RewriteEngine localmente
+# Esto sobreescribe cualquier regla de reescritura del directorio padre (evita captura de URLs y 404s)
+RewriteEngine On
+
+# 2. Impedir listado de archivos en directorios (Directory Browsing)
+Options -Indexes
+
+# 3. Bloquear de forma absoluta el acceso HTTP directo al archivo .env
+<FilesMatch "^\.env$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# 4. Bloquear el acceso directo a carpetas privadas de arquitectura
+RedirectMatch 404 ^.*/(src|database|.agents|.git)(/|$)
+
+# 5. Forzar UTF-8 por defecto para evitar problemas de codificación y XSS
+AddDefaultCharset UTF-8

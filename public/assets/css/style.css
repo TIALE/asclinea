@@ -1,0 +1,715 @@
+/* -------------------------------------------------------------
+ * SISTEMA DE DISEÑO PREMIUM - ALESEARCHTOOL
+ * Inspirado en el Look & Feel Corporativo Light-Mode & Soft-Shadows
+ * ------------------------------------------------------------- */
+
+:root {
+    --font-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-heading: 'Outfit', sans-serif;
+
+    /* Paleta Light-Mode Corporativa (Inspirada en el Look & Feel provisto) */
+    --color-bg-light: #f3f6fd;          /* Fondo general de la app (gris-azul muy suave) */
+    --color-bg-card: #ffffff;           /* Fondo de contenedores y paneles (blanco puro) */
+    --color-sidebar: #ffffff;           /* Fondo de la barra lateral */
+    
+    /* Colores de Marca y Estados */
+    --color-primary: #1a419c;           /* Azul corporativo profundo (Los Aranceles / AleSearchTool) */
+    --color-primary-light: #eef2ff;     /* Fondo de item activo/hover (azul-índigo suave) */
+    --color-secondary: #5f6368;         /* Gris elegante para navegación inactiva */
+    --color-border: #e2e8f0;            /* Color de bordes y líneas divisorias modernas */
+    --color-text-dark: #1e293b;         /* Gris pizarra para textos principales */
+    --color-text-muted: #64748b;        /* Gris medio para subtítulos y descripciones */
+    
+    /* Acentos de Alertas */
+    --color-accent-orange: #f97316;     /* Naranja para advertencias o estados medios */
+    --color-accent-green: #10b981;      /* Verde esmeralda para estados seguros/activos */
+    --color-danger: #ef4444;            /* Rojo para estados críticos y botón de salir */
+    --color-danger-light: #fef2f2;      /* Rojo suave para fondos de error */
+
+    /* Animaciones y Sombras */
+    --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 18px;
+    --shadow-premium: 0 10px 25px -5px rgba(0, 0, 0, 0.03), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+    --shadow-card: 0 4px 30px rgba(0, 0, 0, 0.02);
+}
+
+/* Reseteo General de Caja */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--color-bg-light);
+    color: var(--color-text-dark);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* -------------------------------------------------------------
+ * 1. PANTALLA DE LOGIN PREMIUM (LIGHT-MODE)
+ * ------------------------------------------------------------- */
+
+.login-body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--color-bg-light);
+    position: relative;
+    padding: 20px;
+}
+
+/* Envoltura del Login */
+.login-wrapper {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 440px;
+}
+
+/* Tarjeta Limpia y Moderna con Sombra Suave */
+.login-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-lg);
+    padding: 40px 35px;
+    box-shadow: var(--shadow-premium);
+    transition: var(--transition-smooth);
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.login-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 35px -5px rgba(26, 65, 156, 0.06);
+    border-color: rgba(26, 65, 156, 0.2);
+}
+
+/* Encabezado */
+.login-header {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-logo {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--border-radius-md);
+    background: var(--color-primary-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.fleet-icon {
+    width: 38px;
+    height: 38px;
+    color: var(--color-primary);
+}
+
+.brand-title {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--color-primary);
+    letter-spacing: -0.5px;
+}
+
+.brand-subtitle {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+    max-width: 250px;
+    line-height: 1.4;
+}
+
+/* Contenido */
+.login-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.login-instruction {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* Alerta de Error (Estilo Light) */
+.alert-danger {
+    background: var(--color-danger-light);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    padding: 14px 16px;
+    border-radius: var(--border-radius-sm);
+    color: var(--color-danger);
+    font-size: 0.88rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    line-height: 1.4;
+    animation: shake 0.4s ease;
+}
+
+.alert-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+
+/* Contenedor del Botón de Google */
+.oauth-button-container {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    position: relative;
+}
+
+/* Footer del Login */
+.login-footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    border-top: 1px solid var(--color-border);
+    padding-top: 20px;
+}
+
+.security-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.shield-icon {
+    width: 14px;
+    height: 14px;
+}
+
+/* -------------------------------------------------------------
+ * 2. DISEÑO DEL DASHBOARD (LOOK & FEEL "LOS ARANCELES")
+ * ------------------------------------------------------------- */
+
+.dashboard-body {
+    background-color: var(--color-bg-light);
+    font-family: var(--font-primary);
+    min-height: 100vh;
+}
+
+/* Contenedor de Layout */
+.app-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: 100vh;
+}
+
+/* BARRA LATERAL (Sidebar en Blanco Puro y Borde Fino) */
+.app-sidebar {
+    background-color: var(--color-sidebar);
+    border-right: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    padding: 30px 20px;
+    justify-content: space-between;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+    padding-left: 8px;
+}
+
+.sidebar-logo-icon {
+    width: 28px;
+    height: 28px;
+    color: var(--color-primary);
+}
+
+.sidebar-logo-text {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--color-primary);
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.nav-item {
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition-smooth);
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    color: var(--color-secondary);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: var(--transition-smooth);
+}
+
+.nav-icon {
+    width: 20px;
+    height: 20px;
+    opacity: 0.8;
+    color: var(--color-secondary);
+    transition: var(--transition-smooth);
+}
+
+/* Item Activo: Fondo azul suave con letras azul corporativo */
+.nav-item.active {
+    background-color: var(--color-primary-light);
+}
+
+.nav-item.active .nav-link {
+    color: var(--color-primary);
+}
+
+.nav-item.active .nav-icon {
+    color: var(--color-primary);
+    opacity: 1;
+}
+
+/* Hover de Items */
+.nav-item:not(.active):hover {
+    background-color: #f8fafc;
+}
+
+.nav-item:not(.active):hover .nav-link {
+    color: var(--color-text-dark);
+}
+
+/* Sección de Usuario del Sidebar */
+.sidebar-user {
+    margin-top: auto;
+    border-top: 1px solid var(--color-border);
+    padding-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 2px solid var(--color-primary-light);
+    object-fit: cover;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.user-name {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--color-text-dark);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.user-role {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+.btn-logout-icon {
+    color: var(--color-text-muted);
+    opacity: 0.7;
+    transition: var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-logout-icon:hover {
+    color: var(--color-danger);
+    opacity: 1;
+}
+
+.logout-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* CONTENIDO PRINCIPAL (Fondo Gris Suave) */
+.app-content-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Barra Superior en Blanco Puro con Borde Fino */
+.app-header {
+    height: 70px;
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+}
+
+.header-search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f8fafc;
+    border-radius: var(--border-radius-sm);
+    padding: 8px 16px;
+    width: 320px;
+    border: 1px solid var(--color-border);
+    transition: var(--transition-smooth);
+}
+
+.header-search:focus-within {
+    border-color: var(--color-primary);
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(26, 65, 156, 0.1);
+}
+
+.search-icon {
+    width: 16px;
+    height: 16px;
+    color: var(--color-text-muted);
+}
+
+.search-input {
+    background: none;
+    border: none;
+    color: var(--color-text-dark);
+    font-family: var(--font-primary);
+    font-size: 0.88rem;
+    outline: none;
+    width: 100%;
+}
+
+.header-action-icon {
+    width: 22px;
+    height: 22px;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.header-action-icon:hover {
+    color: var(--color-primary);
+}
+
+.notification-trigger {
+    position: relative;
+}
+
+.notification-trigger .badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: var(--color-danger);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Cuerpo de Contenido */
+.content-body {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Banner de Bienvenida Estilo Corporativo Impecable */
+.welcome-banner {
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    border-left: 5px solid var(--color-primary); /* Barra de acento izquierda típica de dashboard premium */
+    border-radius: var(--border-radius-md);
+    padding: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-premium);
+}
+
+.welcome-text h2 {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 8px;
+}
+
+.welcome-text p {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.welcome-badge span {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    border: 1px solid rgba(26, 65, 156, 0.15);
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+/* Grilla de Estadísticas (Tarjetas en Blanco Puro y Bordes Delgados) */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.stat-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: var(--shadow-premium);
+    transition: var(--transition-smooth);
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 30px -5px rgba(0,0,0,0.05);
+    border-color: rgba(26, 65, 156, 0.15);
+}
+
+.stat-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--border-radius-sm);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stat-icon-wrapper.color-orange {
+    background: rgba(249, 115, 22, 0.1);
+    color: var(--color-accent-orange);
+}
+
+.stat-icon-wrapper.color-cyan {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+}
+
+.stat-icon-wrapper.color-green {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--color-accent-green);
+}
+
+.stat-card-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--color-text-dark);
+    font-family: var(--font-heading);
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    font-weight: 600;
+}
+
+/* Detalles del Dashboard (Tarjetas en Blanco Puro y Sombras Suaves) */
+.dashboard-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.details-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: var(--shadow-premium);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 15px;
+}
+
+.card-header h3 {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.view-all-link {
+    font-size: 0.85rem;
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 700;
+    transition: var(--transition-smooth);
+}
+
+.view-all-link:hover {
+    text-decoration: underline;
+}
+
+/* Listas de Actividades y Documentos */
+.activity-list, .knowledge-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.badge-status {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.badge-status.priority-high {
+    background: var(--color-danger-light);
+    color: var(--color-danger);
+}
+
+.badge-status.priority-medium {
+    background: rgba(249, 115, 22, 0.1);
+    color: var(--color-accent-orange);
+}
+
+.badge-status.priority-low {
+    background: #f1f5f9;
+    color: var(--color-text-muted);
+}
+
+.activity-text strong, .knowledge-text strong {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--color-text-dark);
+    display: block;
+}
+
+.activity-text p, .knowledge-text p {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+.knowledge-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.doc-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--color-primary);
+    opacity: 0.9;
+}
+
+/* -------------------------------------------------------------
+ * 3. DISEÑO RESPONSIVO (Adaptabilidad)
+ * ------------------------------------------------------------- */
+
+@media (max-width: 1024px) {
+    .app-layout {
+        grid-template-columns: 1fr;
+    }
+    .app-sidebar {
+        display: none; /* En implementaciones futuras se agrega menú de hamburguesa */
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .dashboard-details-grid {
+        grid-template-columns: 1fr;
+    }
+    .welcome-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .app-header {
+        padding: 0 20px;
+    }
+    .content-body {
+        padding: 20px;
+    }
+}
