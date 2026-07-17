@@ -49,5 +49,15 @@ class EnvLoader
                 $_SERVER[$key] = $value;
             }
         }
+
+        // Cargar variables encriptadas/seguras si existen
+        try {
+            $secureVars = \App\Shared\Config\SecureConfig::decrypt();
+            foreach ($secureVars as $key => $value) {
+                putenv("{$key}={$value}");
+                $_ENV[$key] = $value;
+                $_SERVER[$key] = $value;
+            }
+        } catch (\Exception $e) {}
     }
 }

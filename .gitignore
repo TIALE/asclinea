@@ -5,3 +5,7 @@ vendor/
 .DS_Store
 .agents/
 .gemini/
+*.db
+database/flota.db
+database/config_secure.enc
+*.enc

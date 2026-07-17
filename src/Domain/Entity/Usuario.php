@@ -16,6 +16,7 @@ class Usuario
     private ?string $googleSub;
     private ?string $fotoUrl;
     private bool $esActivo;
+    private string $rol;
 
     public function __construct(
         ?int $id,
@@ -23,7 +24,8 @@ class Usuario
         string $correo,
         ?string $googleSub = null,
         ?string $fotoUrl = null,
-        bool $esActivo = true
+        bool $esActivo = true,
+        string $rol = 'Administrador'
     ) {
         $this->id = $id;
         $this->nombre = $nombre;
@@ -31,6 +33,7 @@ class Usuario
         $this->googleSub = $googleSub;
         $this->fotoUrl = $fotoUrl;
         $this->esActivo = $esActivo;
+        $this->rol = $rol;
     }
 
     public function getId(): ?int
@@ -61,6 +64,16 @@ class Usuario
     public function esActivo(): bool
     {
         return $this->esActivo;
+    }
+
+    public function getRol(): string
+    {
+        return $this->rol;
+    }
+
+    public function asignarRol(string $rol): void
+    {
+        $this->rol = $rol;
     }
 
     /**

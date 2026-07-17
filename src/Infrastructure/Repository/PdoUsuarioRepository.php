@@ -27,7 +27,20 @@ class PdoUsuarioRepository implements UsuarioRepositoryInterface
      */
     public function findByCorreo(string $correo): ?Usuario
     {
-        $sql = "SELECT id_usuario, nombre, correo, google_sub, foto_url, es_activo 
+        // Auto-Sanación de la Base de Datos antes de realizar la consulta (Gatillo de Resiliencia)
+        try {
+            $checkCol = $this->pdo->query("SHOW COLUMNS FROM tbc_Usuario LIKE 'rol'")->fetch();
+            if (!$checkCol) {
+                // Agregar la columna 'rol'
+                $this->pdo->exec("ALTER TABLE tbc_Usuario ADD COLUMN rol VARCHAR(50) NOT NULL DEFAULT 'Administrador'");
+                // Asegurar privilegios de administrador para las cuentas principales
+                $this->pdo->exec("UPDATE tbc_Usuario SET rol = 'Administrador' WHERE correo IN ('l.rodriguez@aleservicecenter.com', 'admin@aleservicecenter.com')");
+            }
+        } catch (\Throwable $colEx) {
+            error_log("Error de auto-sanación en PdoUsuarioRepository (rol col): " . $colEx->getMessage());
+        }
+
+        $sql = "SELECT id_usuario, nombre, correo, google_sub, foto_url, es_activo, rol 
                 FROM tbc_Usuario 
                 WHERE correo = :correo 
                 LIMIT 1";
@@ -47,7 +60,8 @@ class PdoUsuarioRepository implements UsuarioRepositoryInterface
                 $row['correo'],
                 $row['google_sub'],
                 $row['foto_url'],
-                (int)$row['es_activo'] === 1
+                (int)$row['es_activo'] === 1,
+                (string)($row['rol'] ?? 'Administrador')
             );
         } catch (Exception $e) {
             error_log("Error en PdoUsuarioRepository::findByCorreo: " . $e->getMessage());
@@ -63,8 +77,8 @@ class PdoUsuarioRepository implements UsuarioRepositoryInterface
         try {
             if ($usuario->getId() === null) {
                 // Registro nuevo
-                $sql = "INSERT INTO tbc_Usuario (nombre, correo, google_sub, foto_url, es_activo) 
-                        VALUES (:nombre, :correo, :google_sub, :foto_url, :es_activo)";
+                $sql = "INSERT INTO tbc_Usuario (nombre, correo, google_sub, foto_url, es_activo, rol) 
+                        VALUES (:nombre, :correo, :google_sub, :foto_url, :es_activo, :rol)";
                 
                 $stmt = $this->pdo->prepare($sql);
                 $stmt->execute([
@@ -73,6 +87,7 @@ class PdoUsuarioRepository implements UsuarioRepositoryInterface
                     ':google_sub' => $usuario->getGoogleSub(),
                     ':foto_url'   => $usuario->getFotoUrl(),
                     ':es_activo'  => $usuario->esActivo() ? 1 : 0,
+                    ':rol'        => $usuario->getRol(),
                 ]);
             } else {
                 // Actualización de registro existente (ej: enlazar Google sub o actualizar foto)
@@ -80,7 +95,8 @@ class PdoUsuarioRepository implements UsuarioRepositoryInterface
                         SET nombre = :nombre, 
                             google_sub = :google_sub, 
                             foto_url = :foto_url, 
-                            es_activo = :es_activo 
+                            es_activo = :es_activo,
+                            rol = :rol 
                         WHERE id_usuario = :id";
                 
                 $stmt = $this->pdo->prepare($sql);
@@ -90,6 +106,7 @@ class PdoUsuarioRepository implements UsuarioRepositoryInterface
                     ':google_sub' => $usuario->getGoogleSub(),
                     ':foto_url'   => $usuario->getFotoUrl(),
                     ':es_activo'  => $usuario->esActivo() ? 1 : 0,
+                    ':rol'        => $usuario->getRol(),
                 ]);
             }
         } catch (Exception $e) {

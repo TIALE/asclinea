@@ -20,3 +20,15 @@ RedirectMatch 404 ^.*/(src|database|.agents|.git)(/|$)
 
 # 5. Forzar UTF-8 por defecto para evitar problemas de codificación y XSS
 AddDefaultCharset UTF-8
+
+# 6. Desactivar Caché de Servidor y Navegador de forma Absoluta para Desarrollos Activos
+# Esto obliga al navegador y proxies a descargar el HTML, CSS y JS frescos en cada recarga
+<FilesMatch "\.(html|htm|js|css|php)$">
+    FileETag None
+    <IfModule mod_headers.c>
+        Header unset ETag
+        Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "Wed, 11 Jan 1984 05:00:00 GMT"
+    </IfModule>
+</FilesMatch>

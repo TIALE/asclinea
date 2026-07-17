@@ -11,13 +11,19 @@ namespace App\Shared\Session;
  */
 class SessionManager
 {
-    /**
-     * Inicia la sesión aplicando directivas estrictas de seguridad.
-     */
     public static function start(): void
     {
         if (session_status() === PHP_SESSION_ACTIVE) {
             return;
+        }
+
+        // Hostinger / Shared Hosting Fix: Configurar ruta de guardado de sesión local y escribible
+        $sessionDir = __DIR__ . '/../../../database/sessions';
+        if (!is_dir($sessionDir)) {
+            @mkdir($sessionDir, 0777, true);
+        }
+        if (is_dir($sessionDir) && is_writable($sessionDir)) {
+            ini_set('session.save_path', $sessionDir);
         }
 
         // Detectar dinámicamente si el protocolo es HTTPS
@@ -76,6 +82,17 @@ class SessionManager
     {
         self::start();
         return isset($_SESSION[$key]);
+    }
+ 
+    /**
+     * Elimina una clave de la sesión de forma segura.
+     */
+    public static function remove(string $key): void
+    {
+        self::start();
+        if (isset($_SESSION[$key])) {
+            unset($_SESSION[$key]);
+        }
     }
 
     /**

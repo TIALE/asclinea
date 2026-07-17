@@ -1,6 +1,6 @@
-# deploy.ps1
-# Script de Despliegue Automatizado por FTP para FleetCare Tech
-# Nivel: Arquitectura & DevSecOps Profesional (Uso nativo de .NET en PowerShell)
+param(
+    [switch]$Full
+)
 
 $ErrorActionPreference = "Stop"
 
@@ -67,24 +67,38 @@ function Create-RemoteDirectory {
     }
 }
 
-# Función para subir archivos individuales
 function Upload-File {
     param (
         [string]$localPath,
         [string]$remoteUri,
         [System.Net.NetworkCredential]$credentials
     )
-    $webClient = New-Object System.Net.WebClient
-    $webClient.Credentials = $credentials
-    try {
-        $displayPath = $localPath.Replace($PSScriptRoot, "")
-        Write-Host "Subiendo: $displayPath" -ForegroundColor DarkGray
-        $webClient.UploadFile($remoteUri, "STOR", $localPath)
-    } catch {
-        Write-Host "FALLO: No se pudo subir el archivo $localPath" -ForegroundColor Red
-        throw $_
-    } finally {
-        $webClient.Dispose()
+    $maxRetries = 3
+    $retryCount = 0
+    $success = $false
+    
+    while (-not $success -and $retryCount -lt $maxRetries) {
+        $webClient = New-Object System.Net.WebClient
+        $webClient.Credentials = $credentials
+        try {
+            $displayPath = $localPath.Replace($PSScriptRoot, "")
+            if ($retryCount -gt 0) {
+                Write-Host "Reintentando ($retryCount/$maxRetries): $displayPath" -ForegroundColor Yellow
+                Start-Sleep -Milliseconds 1000
+            } else {
+                Write-Host "Subiendo: $displayPath" -ForegroundColor DarkGray
+            }
+            $webClient.UploadFile($remoteUri, "STOR", $localPath)
+            $success = $true
+        } catch {
+            $retryCount++
+            if ($retryCount -ge $maxRetries) {
+                Write-Host "FALLO definitivo: No se pudo subir el archivo $localPath" -ForegroundColor Red
+                throw $_
+            }
+        } finally {
+            $webClient.Dispose()
+        }
     }
 }
 
@@ -103,12 +117,16 @@ foreach ($segment in $pathSegments) {
     }
 }
 
-# 5. Escanear el directorio local excluyendo archivos de desarrollo y configuración local
 $filesToUpload = Get-ChildItem -Path $PSScriptRoot -Recurse -File | Where-Object {
     $_.FullName -notmatch '\\\.git' -and
     $_.FullName -notmatch '\\\.agents' -and
     $_.FullName -notmatch '\\\.gemini' -and
-    $_.Name -ne "deploy.ps1"
+    $_.Extension -ne ".db" -and
+    $_.Extension -ne ".enc" -and
+    $_.Name -ne ".env" -and
+    $_.Name -ne ".env.example" -and
+    $_.Name -ne "deploy.ps1" -and
+    ($Full -or $_.LastWriteTime -gt (Get-Date).AddHours(-12))
 }
 
 # 6. Procesar e iniciar transferencia

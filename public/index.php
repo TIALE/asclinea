@@ -85,8 +85,8 @@ if (SessionManager::has('login_error')) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
     
-    <!-- Estilos Premium -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Estilos Premium con Cache Busting Dinámico -->
+    <link rel="stylesheet" href="assets/css/style.css?v=<?php echo time(); ?>">
     
     <!-- Script Oficial de Google Identity Services (GSI) -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -102,73 +102,9 @@ if (SessionManager::has('login_error')) {
         <div class="login-card">
             <!-- Encabezado de la Tarjeta -->
             <div class="login-header">
-                <!-- Icono SVG Premium Personalizado de Turbina y Herramientas (AleSearchTool) -->
+                <!-- Logotipo Corporativo Oficial de Alta Fidelidad -->
                 <div class="brand-logo">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="fleet-icon" style="width: 80px; height: 80px;">
-                        <!-- Defs para Gradientes Metálicos y de Herramientas -->
-                        <defs>
-                            <radialGradient id="metal-grad" cx="50%" cy="50%" r="50%">
-                                <stop offset="0%" stop-color="#f0f3f8"/>
-                                <stop offset="50%" stop-color="#b8c4d9"/>
-                                <stop offset="100%" stop-color="#7a8da5"/>
-                            </radialGradient>
-                            <linearGradient id="wrench-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#ffffff"/>
-                                <stop offset="100%" stop-color="#808e9b"/>
-                            </linearGradient>
-                            <linearGradient id="handle-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" stop-color="#e74c3c"/>
-                                <stop offset="50%" stop-color="#c0392b"/>
-                                <stop offset="100%" stop-color="#962d22"/>
-                            </linearGradient>
-                        </defs>
-                        
-                        <!-- Círculo Exterior / Carcasa de la Turbina -->
-                        <circle cx="50" cy="50" r="42" fill="none" stroke="url(#metal-grad)" stroke-width="5" />
-                        <circle cx="50" cy="50" r="38" fill="#101e3d" stroke="#2c3e50" stroke-width="1" />
-                        
-                        <!-- Aspas de la Turbina de Turborreactor (Giradas radialmente) -->
-                        <g stroke="#2c3e50" stroke-width="0.5" fill="url(#metal-grad)">
-                            <path d="M50,50 L50,15 C54,15 56,25 50,50 Z" opacity="0.9" />
-                            <path d="M50,50 L75,25 C78,28 72,36 50,50 Z" opacity="0.9" />
-                            <path d="M50,50 L85,50 C85,54 75,56 50,50 Z" opacity="0.9" />
-                            <path d="M50,50 L75,75 C72,78 64,72 50,50 Z" opacity="0.9" />
-                            <path d="M50,50 L50,85 C46,85 44,75 50,50 Z" opacity="0.9" />
-                            <path d="M50,50 L25,75 C22,72 28,64 50,50 Z" opacity="0.9" />
-                            <path d="M50,50 L15,50 C15,46 25,44 50,50 Z" opacity="0.9" />
-                            <path d="M50,50 L25,25 C28,22 36,28 50,50 Z" opacity="0.9" />
-                        </g>
-                        
-                        <!-- Núcleo de la Turbina -->
-                        <circle cx="50" cy="50" r="10" fill="url(#metal-grad)" stroke="#1a252f" stroke-width="1.5" />
-                        <circle cx="50" cy="50" r="4" fill="#1a252f" />
-                        
-                        <!-- Herramientas Cruzadas en Frente -->
-                        <g>
-                            <!-- Llave Inglesa Cruzada (De abajo-izquierda a arriba-derecha) -->
-                            <g transform="translate(50,50) rotate(-45) translate(-50,-50)">
-                                <!-- Mango de la llave -->
-                                <rect x="47" y="20" width="6" height="60" rx="2" fill="url(#wrench-grad)" stroke="#57606f" stroke-width="1"/>
-                                <!-- Cabeza abierta superior -->
-                                <circle cx="50" cy="20" r="9" fill="url(#wrench-grad)" stroke="#57606f" stroke-width="1"/>
-                                <polygon points="45,11 55,11 55,21 45,21" fill="#101e3d"/>
-                                <!-- Cabeza cerrada inferior -->
-                                <circle cx="50" cy="80" r="7" fill="url(#wrench-grad)" stroke="#57606f" stroke-width="1"/>
-                                <circle cx="50" cy="80" r="3.5" fill="#101e3d"/>
-                            </g>
-                            
-                            <!-- Destornillador Cruzado (De abajo-derecha a arriba-izquierda) -->
-                            <g transform="translate(50,50) rotate(45) translate(-50,-50)">
-                                <!-- Barra metálica -->
-                                <rect x="48.5" y="15" width="3" height="45" fill="url(#wrench-grad)" stroke="#57606f" stroke-width="0.5"/>
-                                <!-- Punta plana -->
-                                <polygon points="47,15 53,15 51,11 49,11" fill="url(#wrench-grad)"/>
-                                <!-- Mango del destornillador -->
-                                <rect x="45" y="55" width="10" height="30" rx="3" fill="url(#handle-grad)" stroke="#78281f" stroke-width="1"/>
-                                <rect x="48" y="55" width="4" height="30" fill="#2c3e50" opacity="0.3"/> <!-- Agarre de goma -->
-                            </g>
-                        </g>
-                    </svg>
+                    <img src="assets/images/logo_menu.png" alt="AleSearchTool Logo" style="width: 100px; height: auto; border-radius: 12px; box-shadow: var(--shadow-sm); transition: var(--transition-smooth);">
                 </div>
                 <h1 class="brand-title">AleSearchTool</h1>
                 <p class="brand-subtitle">Gestión de Fallas y Conocimiento de Flota</p>

@@ -51,6 +51,7 @@ class LoginController
             SessionManager::set('user_name', $usuario->getNombre());
             SessionManager::set('user_email', $usuario->getCorreo());
             SessionManager::set('user_foto', $usuario->getFotoUrl());
+            SessionManager::set('user_role', $usuario->getRol());
             
             // Limpiar errores previos si los hubiera
             if (SessionManager::has('login_error')) {
