@@ -65,6 +65,11 @@ if (empty($filterId)) {
     $filterId = trim((string)filter_input(INPUT_GET, 'id_falla',   FILTER_DEFAULT));
 }
 
+$sortDate = trim((string)filter_input(INPUT_GET, 'sort_date', FILTER_DEFAULT));
+if ($sortDate !== 'ASC') {
+    $sortDate = 'DESC';
+}
+
 $fallas = [];
 $misBookmarks = [];
 
@@ -130,7 +135,11 @@ try {
         $params[':fecha_hasta'] = $fechaHasta;
     }
 
-    $sql .= " ORDER BY id_falla DESC";
+    if ($sortDate === 'ASC') {
+        $sql .= " ORDER BY fecha ASC, id_falla ASC";
+    } else {
+        $sql .= " ORDER BY fecha DESC, id_falla DESC";
+    }
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
     $fallas = $stmt->fetchAll(PDO::FETCH_NUM); // Usamos FETCH_NUM para coincidir con la estructura iterada de los templates originales
@@ -857,19 +866,37 @@ try {
 
         </div>
 
-        <!-- BOTONES DE ACCIÓN (ALINEADOS A LA DERECHA) -->
-        <div style="margin-bottom: 15px; display: flex; justify-content: flex-end; gap: 12px; align-items: center; flex-wrap: wrap;">
-            <button onclick="guardarEnCarpeta()" class="btn-save-folder">
-                <i class="fas fa-folder-plus"></i> Guardar en Mi Carpeta
-            </button>
-            <button onclick="exportarSeleccionados()" class="btn-export-pdf">
-                <i class="fas fa-file-invoice"></i> Exportar Seleccionados a PDF
-            </button>
-            <?php if (in_array($userRole, ['Ingeniero', 'Supervisor', 'Administrador'], true)): ?>
-            <button onclick="exportarExcel()" id="btnExportExcel" style="background: linear-gradient(135deg, #16a34a, #22c55e); color: #ffffff; padding: 10px 20px; border-radius: 8px; border: none; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease-in-out; box-shadow: 0 3px 6px rgba(22, 163, 74, 0.2);" onmouseover="this.style.background='linear-gradient(135deg, #15803d, #16a34a)'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='linear-gradient(135deg, #16a34a, #22c55e)'; this.style.transform='translateY(0)';">
-                <i class="fas fa-file-excel"></i> Exportar a Excel
-            </button>
-            <?php endif; ?>
+        <!-- CONTROLES SUPERIORES DE TABLA (ORDEN Y ACCIONES) -->
+        <div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            
+            <!-- BOTON ORDENAR (IZQUIERDA) -->
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <?php 
+                $nextSort = ($sortDate === 'DESC') ? 'ASC' : 'DESC';
+                $sortIcon = ($sortDate === 'DESC') ? 'fa-arrow-down' : 'fa-arrow-up';
+                $sortParams = $_GET;
+                $sortParams['sort_date'] = $nextSort;
+                $sortUrl = '?' . http_build_query($sortParams);
+                ?>
+                <a href="<?php echo htmlspecialchars($sortUrl, ENT_QUOTES, 'UTF-8'); ?>" style="background: #ffffff; border: 1px solid #1a419c; color: #1a419c; padding: 10px 15px; border-radius: 8px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; box-shadow: 0 2px 4px rgba(26,65,156,0.1);" onmouseover="this.style.backgroundColor='#1a419c'; this.style.color='#ffffff';" onmouseout="this.style.backgroundColor='#ffffff'; this.style.color='#1a419c';">
+                    <i class="fas fa-calendar-day"></i> Fecha <i class="fas <?php echo $sortIcon; ?>" style="margin-left:4px;"></i>
+                </a>
+            </div>
+
+            <!-- BOTONES DE ACCIÓN (DERECHA) -->
+            <div style="display: flex; justify-content: flex-end; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <button onclick="guardarEnCarpeta()" class="btn-save-folder">
+                    <i class="fas fa-folder-plus"></i> Guardar en Mi Carpeta
+                </button>
+                <button onclick="exportarSeleccionados()" class="btn-export-pdf">
+                    <i class="fas fa-file-invoice"></i> Exportar Seleccionados a PDF
+                </button>
+                <?php if (in_array($userRole, ['Ingeniero', 'Supervisor', 'Administrador'], true)): ?>
+                <button onclick="exportarExcel()" id="btnExportExcel" style="background: linear-gradient(135deg, #16a34a, #22c55e); color: #ffffff; padding: 10px 20px; border-radius: 8px; border: none; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease-in-out; box-shadow: 0 3px 6px rgba(22, 163, 74, 0.2);" onmouseover="this.style.background='linear-gradient(135deg, #15803d, #16a34a)'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='linear-gradient(135deg, #16a34a, #22c55e)'; this.style.transform='translateY(0)';">
+                    <i class="fas fa-file-excel"></i> Exportar a Excel
+                </button>
+                <?php endif; ?>
+            </div>
         </div>
 
         <!-- CONTENEDOR DE LA TABLA -->
