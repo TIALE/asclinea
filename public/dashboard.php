@@ -190,8 +190,7 @@ try {
         </a>
 
         <a href="administracion.php">
-            <i class="fas fa-gear"></i>
-            Administración
+            <i class="fas fa-gear"></i> Administración y mas
         </a>
         <?php else: ?>
         <a href="#" style="opacity: 0.5; cursor: not-allowed;" onclick="alert('Módulo inhabilitado de acuerdo a sus directivas de rol actual (Otro).'); return false;">
@@ -204,7 +203,7 @@ try {
             <i class="fas fa-lock" style="color: #94a3b8; font-size: 12px; margin-right: 5px;"></i> Asistente IA (Bloqueado)
         </a>
         <a href="#" style="opacity: 0.5; cursor: not-allowed;" onclick="alert('Módulo inhabilitado de acuerdo a sus directivas de rol actual (Otro).'); return false;">
-            <i class="fas fa-lock" style="color: #94a3b8; font-size: 12px; margin-right: 5px;"></i> Administración (Bloqueado)
+            <i class="fas fa-lock" style="color: #94a3b8; font-size: 12px; margin-right: 5px;"></i> Administración y mas (Bloqueado)
         </a>
         <?php endif; ?>
         

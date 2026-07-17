@@ -470,7 +470,7 @@ try {
         </a>
 
         <a href="administracion.php" class="active">
-            <i class="fas fa-gear"></i> Administración
+            <i class="fas fa-gear"></i> Administración y mas
         </a>
 
         <a href="index.php?action=logout" class="logout-btn">
