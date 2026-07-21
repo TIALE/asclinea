@@ -82,7 +82,7 @@ try {
     $misBookmarks = $stmtBk->fetchAll(PDO::FETCH_COLUMN);
 
     // Construir consulta dinámica parametrizada
-    $sql = "SELECT id_falla, modelo, matricula, ata, fecha, descripcion, accion_correctiva, referencia, tips, condicion, folio, mel AS capitulo_mel, categoria_mel, base, registrado_por, horas, ciclos, tiempo_atencion, componente_cambiado, comp_removido_np, comp_removido_ns, comp_instalado_np, comp_instalado_ns FROM tbo_Falla WHERE 1=1";
+    $sql = "SELECT id_falla, modelo, matricula, ata, fecha, descripcion, accion_correctiva, referencia, tips, condicion, folio, mel AS capitulo_mel, categoria_mel, base, registrado_por, horas, ciclos, tiempo_atencion, componente_cambiado, comp_removido_np, comp_removido_ns, comp_instalado_np, comp_instalado_ns, comp2_removido_np, comp2_removido_ns, comp2_instalado_np, comp2_instalado_ns, componentes_adicionales FROM tbo_Falla WHERE 1=1";
     $params = [];
 
     if (!empty($q)) {
@@ -987,7 +987,12 @@ try {
                                 'comp_removido_np' => isset($falla[19]) ? (string)$falla[19] : 'N/A',
                                 'comp_removido_ns' => isset($falla[20]) ? (string)$falla[20] : 'N/A',
                                 'comp_instalado_np' => isset($falla[21]) ? (string)$falla[21] : 'N/A',
-                                'comp_instalado_ns' => isset($falla[22]) ? (string)$falla[22] : 'N/A'
+                                'comp_instalado_ns' => isset($falla[22]) ? (string)$falla[22] : 'N/A',
+                                'comp2_removido_np' => isset($falla[23]) ? (string)$falla[23] : null,
+                                'comp2_removido_ns' => isset($falla[24]) ? (string)$falla[24] : null,
+                                'comp2_instalado_np' => isset($falla[25]) ? (string)$falla[25] : null,
+                                'comp2_instalado_ns' => isset($falla[26]) ? (string)$falla[26] : null,
+                                'componentes_adicionales' => isset($falla[27]) ? json_decode((string)$falla[27], true) : null
                             ];
                             $fallasJsData[$idFalla] = $fallaDataForJs;
                         ?>
@@ -1175,13 +1180,53 @@ try {
             
             // Mostrar u ocultar sección de componentes cambiados
             const secComp = document.getElementById('sectionComponentes');
-            if (secComp) {
-                if (data.componente_cambiado === 'Sí' && data.comp_removido_np && data.comp_removido_np !== 'N/A') {
-                    secComp.style.display = 'block';
-                    setElementText('modalCompRemovidoNp', data.comp_removido_np || '----');
-                    setElementText('modalCompRemovidoNs', data.comp_removido_ns || '----');
-                    setElementText('modalCompInstaladoNp', data.comp_instalado_np || '----');
-                    setElementText('modalCompInstaladoNs', data.comp_instalado_ns || '----');
+            const compContainer = document.getElementById('modalComponentesContainer');
+            if (secComp && compContainer) {
+                if (data.componente_cambiado === 'Sí') {
+                    let html = '';
+                    
+                    const genBloque = (idx, rnp, rns, inp, ins) => {
+                        return `
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 10px;">
+                            <div style="border-right: 1px solid #e2e8f0; padding-right: 15px;">
+                                <h4 style="margin: 0 0 10px 0; color: #ef4444; font-family: 'Outfit', sans-serif; font-size: 13.5px; font-weight: 700; text-transform: uppercase;">
+                                    <i class="fas fa-arrow-right-from-bracket"></i> Removido ${idx}
+                                </h4>
+                                <div style="font-size: 13px; color: #475569;">
+                                    <strong>N/P:</strong> <span style="font-weight: 700; color: #1e293b;">${rnp || '----'}</span><br>
+                                    <strong>N/S:</strong> <span style="font-weight: 700; color: #1e293b;">${rns || '----'}</span>
+                                </div>
+                            </div>
+                            <div style="padding-left: 15px;">
+                                <h4 style="margin: 0 0 10px 0; color: #22c55e; font-family: 'Outfit', sans-serif; font-size: 13.5px; font-weight: 700; text-transform: uppercase;">
+                                    <i class="fas fa-arrow-right-to-bracket"></i> Instalado ${idx}
+                                </h4>
+                                <div style="font-size: 13px; color: #475569;">
+                                    <strong>N/P:</strong> <span style="font-weight: 700; color: #1e293b;">${inp || '----'}</span><br>
+                                    <strong>N/S:</strong> <span style="font-weight: 700; color: #1e293b;">${ins || '----'}</span>
+                                </div>
+                            </div>
+                        </div>`;
+                    };
+
+                    if (data.comp_removido_np && data.comp_removido_np !== 'N/A') {
+                        html += genBloque(1, data.comp_removido_np, data.comp_removido_ns, data.comp_instalado_np, data.comp_instalado_ns);
+                    }
+                    if (data.comp2_removido_np && data.comp2_removido_np !== 'N/A') {
+                        html += genBloque(2, data.comp2_removido_np, data.comp2_removido_ns, data.comp2_instalado_np, data.comp2_instalado_ns);
+                    }
+                    if (data.componentes_adicionales && Array.isArray(data.componentes_adicionales)) {
+                        data.componentes_adicionales.forEach((comp, i) => {
+                            html += genBloque(i + 3, comp.removido_np, comp.removido_ns, comp.instalado_np, comp.instalado_ns);
+                        });
+                    }
+
+                    if (html !== '') {
+                        compContainer.innerHTML = html;
+                        secComp.style.display = 'block';
+                    } else {
+                        secComp.style.display = 'none';
+                    }
                 } else {
                     secComp.style.display = 'none';
                 }
@@ -1474,30 +1519,55 @@ try {
                 <div class="section-content" style="color: #1a419c; font-weight: 600;">${data.tips}</div>
                 ` : ''}
                 
-                ${data.componente_cambiado === 'Sí' && data.comp_removido_np !== 'N/A' ? `
-                <div class="section-title">Componentes Reemplazados</div>
-                <table class="components-table">
-                    <thead>
+                ${(function() {
+                    if (data.componente_cambiado !== 'Sí') return '';
+                    
+                    let html = '';
+                    let idx = 1;
+                    const genBloquePrint = (i, rnp, rns, inp, ins) => {
+                        return `
                         <tr>
-                            <th>Acción</th>
-                            <th>N/P (Número de Parte)</th>
-                            <th>N/S (Número de Serie)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="color: #b91c1c; font-weight: 600;">[ - ] Removido</td>
-                            <td>${data.comp_removido_np || '----'}</td>
-                            <td>${data.comp_removido_ns || '----'}</td>
+                            <td style="color: #b91c1c; font-weight: 600;">[ - ] Removido ${i}</td>
+                            <td>${rnp || '----'}</td>
+                            <td>${rns || '----'}</td>
                         </tr>
                         <tr>
-                            <td style="color: #15803d; font-weight: 600;">[ + ] Instalado</td>
-                            <td>${data.comp_instalado_np || '----'}</td>
-                            <td>${data.comp_instalado_ns || '----'}</td>
+                            <td style="color: #15803d; font-weight: 600;">[ + ] Instalado ${i}</td>
+                            <td>${inp || '----'}</td>
+                            <td>${ins || '----'}</td>
                         </tr>
-                    </tbody>
-                </table>
-                ` : ''}
+                        `;
+                    };
+
+                    if (data.comp_removido_np && data.comp_removido_np !== 'N/A') {
+                        html += genBloquePrint(idx++, data.comp_removido_np, data.comp_removido_ns, data.comp_instalado_np, data.comp_instalado_ns);
+                    }
+                    if (data.comp2_removido_np && data.comp2_removido_np !== 'N/A') {
+                        html += genBloquePrint(idx++, data.comp2_removido_np, data.comp2_removido_ns, data.comp2_instalado_np, data.comp2_instalado_ns);
+                    }
+                    if (data.componentes_adicionales && Array.isArray(data.componentes_adicionales)) {
+                        data.componentes_adicionales.forEach(comp => {
+                            html += genBloquePrint(idx++, comp.removido_np, comp.removido_ns, comp.instalado_np, comp.instalado_ns);
+                        });
+                    }
+
+                    if (html === '') return '';
+                    return `
+                    <div class="section-title">Componentes Reemplazados</div>
+                    <table class="components-table">
+                        <thead>
+                            <tr>
+                                <th>Acción</th>
+                                <th>N/P (Número de Parte)</th>
+                                <th>N/S (Número de Serie)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${html}
+                        </tbody>
+                    </table>
+                    `;
+                })()}
                 
                 <div class="footer">
                     <span>Generado automáticamente por AleSearchTool</span>
@@ -1906,21 +1976,11 @@ try {
                 </span>
             </div>
             <div id="editCompSec" style="display:${compDisplay};">
-                <div class="edit-grid-2">
-                    <div>
-                        <h4 style="margin:0 0 10px; color:#ef4444; font-family:'Outfit',sans-serif; font-size:13px; font-weight:700; text-transform:uppercase;">
-                            <i class="fas fa-arrow-right-from-bracket"></i> Componente Removido
-                        </h4>
-                        <div class="edit-field"><label>N/P</label><input type="text" id="editCompRemNp" value="${escHtml(data.comp_removido_np !== 'N/A' ? data.comp_removido_np : '')}"></div>
-                        <div class="edit-field"><label>N/S</label><input type="text" id="editCompRemNs" value="${escHtml(data.comp_removido_ns !== 'N/A' ? data.comp_removido_ns : '')}"></div>
-                    </div>
-                    <div>
-                        <h4 style="margin:0 0 10px; color:#22c55e; font-family:'Outfit',sans-serif; font-size:13px; font-weight:700; text-transform:uppercase;">
-                            <i class="fas fa-arrow-right-to-bracket"></i> Componente Instalado
-                        </h4>
-                        <div class="edit-field"><label>N/P</label><input type="text" id="editCompInstNp" value="${escHtml(data.comp_instalado_np !== 'N/A' ? data.comp_instalado_np : '')}"></div>
-                        <div class="edit-field"><label>N/S</label><input type="text" id="editCompInstNs" value="${escHtml(data.comp_instalado_ns !== 'N/A' ? data.comp_instalado_ns : '')}"></div>
-                    </div>
+                <div id="editCompContainer"></div>
+                <div style="text-align: right; margin-top: 15px; margin-bottom: 5px;">
+                    <button type="button" onclick="agregarComponenteEdicion()" style="background: none; border: none; color: #1a419c; font-family: 'Outfit', sans-serif; font-weight: 700; cursor: pointer; font-size: 13px; display: inline-flex; align-items: center; gap: 5px;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">
+                        <i class="fas fa-plus-circle"></i> Agregar otro componente
+                    </button>
                 </div>
             </div>
             <div style="display:flex; gap:12px; margin-top:20px; padding-top:15px; border-top:1px solid #e2e8f0; justify-content:flex-end;">
@@ -1932,6 +1992,60 @@ try {
             document.getElementById('modalViewMode').style.display = 'none';
             document.getElementById('modalEditContainer').style.display = 'block';
             document.getElementById('modalTitle').innerText = '✏️ Editar Reporte #' + data.id;
+
+            // Inicializar componentes existentes
+            window.editCompCount = 0;
+            const compContainer = document.getElementById('editCompContainer');
+            compContainer.innerHTML = '';
+            
+            if (data.componente_cambiado === 'Sí') {
+                if (data.comp_removido_np && data.comp_removido_np !== 'N/A') {
+                    agregarComponenteEdicion(data.comp_removido_np, data.comp_removido_ns, data.comp_instalado_np, data.comp_instalado_ns);
+                }
+                if (data.comp2_removido_np && data.comp2_removido_np !== 'N/A') {
+                    agregarComponenteEdicion(data.comp2_removido_np, data.comp2_removido_ns, data.comp2_instalado_np, data.comp2_instalado_ns);
+                }
+                if (data.componentes_adicionales && Array.isArray(data.componentes_adicionales)) {
+                    data.componentes_adicionales.forEach(comp => {
+                        agregarComponenteEdicion(comp.removido_np, comp.removido_ns, comp.instalado_np, comp.instalado_ns);
+                    });
+                }
+            }
+            if (window.editCompCount === 0) {
+                agregarComponenteEdicion();
+            }
+        }
+        
+        function agregarComponenteEdicion(rnp = '', rns = '', inp = '', ins = '') {
+            window.editCompCount++;
+            const idx = window.editCompCount;
+            const container = document.getElementById('editCompContainer');
+            const compHtml = `
+            <div class="edit-comp-bloque" data-index="${idx}" style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #cbd5e1;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h4 style="margin: 0; color: #1a419c; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700;">Componente ${idx}</h4>
+                    <button type="button" onclick="this.closest('.edit-comp-bloque').remove()" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 15px; padding: 5px; display: inline-flex; align-items: center; justify-content: center;" title="Quitar componente">
+                        <i class="fas fa-trash-can"></i>
+                    </button>
+                </div>
+                <div class="edit-grid-2">
+                    <div>
+                        <h4 style="margin:0 0 10px; color:#ef4444; font-family:'Outfit',sans-serif; font-size:12px; font-weight:700; text-transform:uppercase;">
+                            <i class="fas fa-arrow-right-from-bracket"></i> Removido
+                        </h4>
+                        <div class="edit-field"><label>N/P</label><input type="text" class="edit_comp_rem_np" value="${escHtml(rnp !== 'N/A' ? rnp : '')}"></div>
+                        <div class="edit-field"><label>N/S</label><input type="text" class="edit_comp_rem_ns" value="${escHtml(rns !== 'N/A' ? rns : '')}"></div>
+                    </div>
+                    <div>
+                        <h4 style="margin:0 0 10px; color:#22c55e; font-family:'Outfit',sans-serif; font-size:12px; font-weight:700; text-transform:uppercase;">
+                            <i class="fas fa-arrow-right-to-bracket"></i> Instalado
+                        </h4>
+                        <div class="edit-field"><label>N/P</label><input type="text" class="edit_comp_inst_np" value="${escHtml(inp !== 'N/A' ? inp : '')}"></div>
+                        <div class="edit-field"><label>N/S</label><input type="text" class="edit_comp_inst_ns" value="${escHtml(ins !== 'N/A' ? ins : '')}"></div>
+                    </div>
+                </div>
+            </div>`;
+            container.insertAdjacentHTML('beforeend', compHtml);
         }
 
         // Funciones auxiliares para referencias en modo edición (Grupo 5)
@@ -2010,6 +2124,11 @@ try {
                 }
             }
 
+            const compRemNps = Array.from(document.querySelectorAll('.edit_comp_rem_np')).map(i => i.value.trim());
+            const compRemNss = Array.from(document.querySelectorAll('.edit_comp_rem_ns')).map(i => i.value.trim());
+            const compInstNps = Array.from(document.querySelectorAll('.edit_comp_inst_np')).map(i => i.value.trim());
+            const compInstNss = Array.from(document.querySelectorAll('.edit_comp_inst_ns')).map(i => i.value.trim());
+
             const payload = {
                 id_falla: parseInt(currentFallaData.id),
                 modelo:            document.getElementById('editModelo').value.trim(),
@@ -2030,10 +2149,10 @@ try {
                 ciclos:            document.getElementById('editCiclos').value.trim(),
                 tiempo_atencion:   document.getElementById('editTiempoAtencion').value.trim(),
                 componente_cambiado: compChecked ? 'Sí' : 'No',
-                comp_removido_np:  compChecked ? document.getElementById('editCompRemNp').value.trim() : 'N/A',
-                comp_removido_ns:  compChecked ? document.getElementById('editCompRemNs').value.trim() : 'N/A',
-                comp_instalado_np: compChecked ? document.getElementById('editCompInstNp').value.trim() : 'N/A',
-                comp_instalado_ns: compChecked ? document.getElementById('editCompInstNs').value.trim() : 'N/A',
+                comp_removido_np:  compChecked ? compRemNps : [],
+                comp_removido_ns:  compChecked ? compRemNss : [],
+                comp_instalado_np: compChecked ? compInstNps : [],
+                comp_instalado_ns: compChecked ? compInstNss : []
             };
             if (!payload.modelo || !payload.matricula || !payload.ata || !payload.descripcion || !payload.accion_correctiva) {
                 alert('⚠️ Faltan campos obligatorios: Modelo, Matrícula, ATA, Descripción y Acción Correctiva.');
@@ -2160,27 +2279,8 @@ try {
                     <div class="modal-section-title">
                         <i class="fas fa-arrows-spin"></i> Componentes Reemplazados
                     </div>
-                    <div class="modal-section-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                        <!-- Componente Removido -->
-                        <div style="border-right: 1px solid #e2e8f0; padding-right: 15px;">
-                            <h4 style="margin: 0 0 10px 0; color: #ef4444; font-family: 'Outfit', sans-serif; font-size: 13.5px; font-weight: 700; text-transform: uppercase;">
-                                <i class="fas fa-arrow-right-from-bracket"></i> Removido
-                            </h4>
-                            <div style="font-size: 13px; color: #475569;">
-                                <strong>N/P:</strong> <span id="modalCompRemovidoNp" style="font-weight: 700; color: #1e293b;">----</span><br>
-                                <strong>N/S:</strong> <span id="modalCompRemovidoNs" style="font-weight: 700; color: #1e293b;">----</span>
-                            </div>
-                        </div>
-                        <!-- Componente Instalado -->
-                        <div style="padding-left: 15px;">
-                            <h4 style="margin: 0 0 10px 0; color: #22c55e; font-family: 'Outfit', sans-serif; font-size: 13.5px; font-weight: 700; text-transform: uppercase;">
-                                <i class="fas fa-arrow-right-to-bracket"></i> Instalado
-                            </h4>
-                            <div style="font-size: 13px; color: #475569;">
-                                <strong>N/P:</strong> <span id="modalCompInstaladoNp" style="font-weight: 700; color: #1e293b;">----</span><br>
-                                <strong>N/S:</strong> <span id="modalCompInstaladoNs" style="font-weight: 700; color: #1e293b;">----</span>
-                            </div>
-                        </div>
+                    <div class="modal-section-content" style="padding: 0; background: transparent; border: none;" id="modalComponentesContainer">
+                        <!-- Dynamic components will go here -->
                     </div>
                 </div>
 

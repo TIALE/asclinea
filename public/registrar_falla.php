@@ -391,77 +391,46 @@ SessionManager::remove('falla_error_msg');
 
             <!-- Panel de Componentes (Removido e Instalado) -->
             <div id="seccion_componentes" style="display: none; margin-top: 15px; margin-bottom: 25px; border: 1px solid #e2e8f0; padding: 20px; border-radius: 12px; background-color: #ffffff; box-shadow: var(--shadow-sm);">
-                <div class="grid-form" style="margin: 0; gap: 20px;">
-                    <!-- Componente Removido -->
-                    <div style="border-right: 1px solid #e2e8f0; padding-right: 20px;">
-                        <h3 style="margin-top: 0; color: #1a419c; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 15px;">
-                            <i class="fas fa-arrow-right-from-bracket" style="color: #ef4444; margin-right: 6px;"></i> Componente Removido
-                        </h3>
-                        <div class="campo" style="margin-bottom: 15px;">
-                            <label>Número de Parte (N/P)</label>
-                            <input type="text" id="comp_removido_np" name="comp_removido_np" placeholder="Ej. 822-0238-002">
-                        </div>
-                        <div class="campo">
-                            <label>Número de Serie (N/S)</label>
-                            <input type="text" id="comp_removido_ns" name="comp_removido_ns" placeholder="Ej. 12938A">
-                        </div>
-                    </div>
-                    
-                    <!-- Componente Instalado -->
-                    <div style="padding-left: 10px;">
-                        <h3 style="margin-top: 0; color: #1a419c; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 15px;">
-                            <i class="fas fa-arrow-right-to-bracket" style="color: #22c55e; margin-right: 6px;"></i> Componente Instalado
-                        </h3>
-                        <div class="campo" style="margin-bottom: 15px;">
-                            <label>Número de Parte (N/P)</label>
-                            <input type="text" id="comp_instalado_np" name="comp_instalado_np" placeholder="Ej. 822-0238-002">
-                        </div>
-                        <div class="campo">
-                            <label>Número de Serie (N/S)</label>
-                            <input type="text" id="comp_instalado_ns" name="comp_instalado_ns" placeholder="Ej. 99283B">
+                <div id="componentes_container">
+                    <div class="componente-bloque" data-index="1">
+                        <div class="grid-form" style="margin: 0; gap: 20px;">
+                            <!-- Componente Removido -->
+                            <div style="border-right: 1px solid #e2e8f0; padding-right: 20px;">
+                                <h3 style="margin-top: 0; color: #1a419c; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 15px;">
+                                    <i class="fas fa-arrow-right-from-bracket" style="color: #ef4444; margin-right: 6px;"></i> Componente Removido
+                                </h3>
+                                <div class="campo" style="margin-bottom: 15px;">
+                                    <label>Número de Parte (N/P)</label>
+                                    <input type="text" class="comp_input" id="comp_removido_np" name="comp_removido_np[]" placeholder="Ej. 822-0238-002">
+                                </div>
+                                <div class="campo">
+                                    <label>Número de Serie (N/S)</label>
+                                    <input type="text" class="comp_input" id="comp_removido_ns" name="comp_removido_ns[]" placeholder="Ej. 12938A">
+                                </div>
+                            </div>
+                            
+                            <!-- Componente Instalado -->
+                            <div style="padding-left: 10px;">
+                                <h3 style="margin-top: 0; color: #1a419c; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 15px;">
+                                    <i class="fas fa-arrow-right-to-bracket" style="color: #22c55e; margin-right: 6px;"></i> Componente Instalado
+                                </h3>
+                                <div class="campo" style="margin-bottom: 15px;">
+                                    <label>Número de Parte (N/P)</label>
+                                    <input type="text" class="comp_input" id="comp_instalado_np" name="comp_instalado_np[]" placeholder="Ej. 822-0238-002">
+                                </div>
+                                <div class="campo">
+                                    <label>Número de Serie (N/S)</label>
+                                    <input type="text" class="comp_input" id="comp_instalado_ns" name="comp_instalado_ns[]" placeholder="Ej. 99283B">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div style="text-align: right; margin-top: 15px; margin-bottom: 5px;">
-                    <button type="button" id="btn_add_comp2" style="background: none; border: none; color: #1a419c; font-family: 'Outfit', sans-serif; font-weight: 700; cursor: pointer; font-size: 13px; display: inline-flex; align-items: center; gap: 5px;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">
-                        <i class="fas fa-plus-circle"></i> Agregar segundo componente
+                    <button type="button" id="btn_add_comp_dinamico" style="background: none; border: none; color: #1a419c; font-family: 'Outfit', sans-serif; font-weight: 700; cursor: pointer; font-size: 13px; display: inline-flex; align-items: center; gap: 5px;" onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">
+                        <i class="fas fa-plus-circle"></i> Agregar otro componente
                     </button>
-                </div>
-
-                <!-- Segundo Componente (Oculto por defecto) -->
-                <div id="seccion_componente_2" style="display: none; margin-top: 20px; padding-top: 20px; border-top: 1px dashed #cbd5e1;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <h4 style="margin: 0; color: #1a419c; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700;">Segundo Componente</h4>
-                        <button type="button" id="btn_remove_comp2" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 16px; padding: 5px; display: inline-flex; align-items: center; justify-content: center;" title="Quitar segundo componente">
-                            <i class="fas fa-trash-can"></i>
-                        </button>
-                    </div>
-                    <div class="grid-form" style="margin: 0; gap: 20px;">
-                        <!-- Componente Removido 2 -->
-                        <div style="border-right: 1px solid #e2e8f0; padding-right: 20px;">
-                            <div class="campo" style="margin-bottom: 15px;">
-                                <label>Número de Parte Removido 2</label>
-                                <input type="text" id="comp2_removido_np" name="comp2_removido_np" placeholder="Ej. 822-0238-002">
-                            </div>
-                            <div class="campo">
-                                <label>Número de Serie Removido 2</label>
-                                <input type="text" id="comp2_removido_ns" name="comp2_removido_ns" placeholder="Ej. 12938A">
-                            </div>
-                        </div>
-                        
-                        <!-- Componente Instalado 2 -->
-                        <div style="padding-left: 10px;">
-                            <div class="campo" style="margin-bottom: 15px;">
-                                <label>Número de Parte Instalado 2</label>
-                                <input type="text" id="comp2_instalado_np" name="comp2_instalado_np" placeholder="Ej. 822-0238-002">
-                            </div>
-                            <div class="campo">
-                                <label>Número de Serie Instalado 2</label>
-                                <input type="text" id="comp2_instalado_ns" name="comp2_instalado_ns" placeholder="Ej. 99283B">
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -535,50 +504,69 @@ SessionManager::remove('falla_error_msg');
         if (fechaInput) fechaInput.addEventListener('change', checkDuplicateFalla);
 
 
-        // Lógica interactiva para Cambio de Componentes (Toggle Switch)
+        // Lógica interactiva para Cambio de Componentes Dinámicos
         document.addEventListener('DOMContentLoaded', function () {
             const switchComponente = document.getElementById('cambio_componente');
             const seccionComponentes = document.getElementById('seccion_componentes');
             const labelSwitch = document.getElementById('switch_label');
+            const btnAddComp = document.getElementById('btn_add_comp_dinamico');
+            const container = document.getElementById('componentes_container');
+            let compCount = 1;
 
-            const inputsComp = [
-                document.getElementById('comp_removido_np'),
-                document.getElementById('comp_removido_ns'),
-                document.getElementById('comp_instalado_np'),
-                document.getElementById('comp_instalado_ns')
-            ];
-
-            const btnAddComp2 = document.getElementById('btn_add_comp2');
-            const btnRemoveComp2 = document.getElementById('btn_remove_comp2');
-            const seccionComponente2 = document.getElementById('seccion_componente_2');
-            const inputsComp2 = [
-                document.getElementById('comp2_removido_np'),
-                document.getElementById('comp2_removido_ns'),
-                document.getElementById('comp2_instalado_np'),
-                document.getElementById('comp2_instalado_ns')
-            ];
-
-            if (btnAddComp2 && seccionComponente2) {
-                btnAddComp2.addEventListener('click', function () {
-                    seccionComponente2.style.display = 'block';
-                    btnAddComp2.style.display = 'none';
-                });
-            }
-
-            if (btnRemoveComp2 && seccionComponente2) {
-                btnRemoveComp2.addEventListener('click', function () {
-                    seccionComponente2.style.display = 'none';
-                    inputsComp2.forEach(input => input.value = '');
-                    btnAddComp2.style.display = 'inline-flex';
+            if (btnAddComp && container) {
+                btnAddComp.addEventListener('click', function () {
+                    compCount++;
+                    const index = compCount;
+                    
+                    const html = `
+                    <div class="componente-bloque" data-index="${index}" style="margin-top: 20px; padding-top: 20px; border-top: 1px dashed #cbd5e1;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h4 style="margin: 0; color: #1a419c; font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700;">Componente ${index}</h4>
+                            <button type="button" class="btn_remove_comp" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 16px; padding: 5px; display: inline-flex; align-items: center; justify-content: center;" title="Quitar componente">
+                                <i class="fas fa-trash-can"></i>
+                            </button>
+                        </div>
+                        <div class="grid-form" style="margin: 0; gap: 20px;">
+                            <div style="border-right: 1px solid #e2e8f0; padding-right: 20px;">
+                                <div class="campo" style="margin-bottom: 15px;">
+                                    <label>Número de Parte Removido</label>
+                                    <input type="text" class="comp_input" name="comp_removido_np[]" placeholder="Ej. 822-0238-002">
+                                </div>
+                                <div class="campo">
+                                    <label>Número de Serie Removido</label>
+                                    <input type="text" class="comp_input" name="comp_removido_ns[]" placeholder="Ej. 12938A">
+                                </div>
+                            </div>
+                            <div style="padding-left: 10px;">
+                                <div class="campo" style="margin-bottom: 15px;">
+                                    <label>Número de Parte Instalado</label>
+                                    <input type="text" class="comp_input" name="comp_instalado_np[]" placeholder="Ej. 822-0238-002">
+                                </div>
+                                <div class="campo">
+                                    <label>Número de Serie Instalado</label>
+                                    <input type="text" class="comp_input" name="comp_instalado_ns[]" placeholder="Ej. 99283B">
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                    
+                    container.insertAdjacentHTML('beforeend', html);
+                    
+                    // Attach event to remove button
+                    const newBlock = container.querySelector(`.componente-bloque[data-index="${index}"]`);
+                    newBlock.querySelector('.btn_remove_comp').addEventListener('click', function() {
+                        newBlock.remove();
+                    });
                 });
             }
 
             function actualizarComponentes() {
+                const inputs = container.querySelectorAll('.comp_input');
                 if (switchComponente.checked) {
                     seccionComponentes.style.display = 'block';
                     labelSwitch.textContent = 'Sí';
                     labelSwitch.style.color = '#1a419c';
-                    inputsComp.forEach(input => {
+                    inputs.forEach(input => {
                         if (input.value === 'N/A') {
                             input.value = '';
                         }
@@ -588,17 +576,19 @@ SessionManager::remove('falla_error_msg');
                     seccionComponentes.style.display = 'none';
                     labelSwitch.textContent = 'No';
                     labelSwitch.style.color = '#5f6368';
-                    inputsComp.forEach(input => {
+                    inputs.forEach(input => {
                         input.value = 'N/A';
                         input.required = false;
                     });
                     
-                    // Resetear componente 2
-                    if (seccionComponente2) {
-                        seccionComponente2.style.display = 'none';
-                        inputsComp2.forEach(input => input.value = '');
-                        if (btnAddComp2) btnAddComp2.style.display = 'inline-flex';
-                    }
+                    // Remover bloques extra si se deshabilita
+                    const bloques = container.querySelectorAll('.componente-bloque');
+                    bloques.forEach(bloque => {
+                        if (bloque.getAttribute('data-index') !== '1') {
+                            bloque.remove();
+                        }
+                    });
+                    compCount = 1;
                 }
             }
 

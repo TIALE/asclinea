@@ -8,15 +8,14 @@ EnvLoader::load(__DIR__ . '/../.env');
 try {
     $pdo = DatabaseConnection::getConnection();
     
+    // Check if column exists
     $checkCol = $pdo->query("SHOW COLUMNS FROM tbo_Falla LIKE 'componentes_adicionales'")->fetch();
     if (!$checkCol) {
         $pdo->exec("ALTER TABLE tbo_Falla ADD COLUMN componentes_adicionales TEXT NULL");
-        echo "Column 'componentes_adicionales' added.\n";
+        echo "Column 'componentes_adicionales' added successfully.\n";
     } else {
-        echo "Column 'componentes_adicionales' already exists.\n";
+        echo "Column already exists.\n";
     }
-    
-    echo "DB Update Complete.\n";
-} catch (Exception $e) {
+} catch (\Exception $e) {
     echo "Error: " . $e->getMessage() . "\n";
 }

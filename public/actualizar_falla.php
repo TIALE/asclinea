@@ -92,17 +92,49 @@ $tiempo_atencion = isset($data['tiempo_atencion']) && $data['tiempo_atencion'] !
 
 // Componente
 $componente_cambiado = (isset($data['componente_cambiado']) && $data['componente_cambiado'] === 'Sí') ? 'Sí' : 'No';
-$comp_removido_np    = trim((string)($data['comp_removido_np'] ?? 'N/A'));
-$comp_removido_ns    = trim((string)($data['comp_removido_ns'] ?? 'N/A'));
-$comp_instalado_np   = trim((string)($data['comp_instalado_np'] ?? 'N/A'));
-$comp_instalado_ns   = trim((string)($data['comp_instalado_ns'] ?? 'N/A'));
 
-if ($componente_cambiado === 'No') {
-    $comp_removido_np  = 'N/A';
-    $comp_removido_ns  = 'N/A';
-    $comp_instalado_np = 'N/A';
-    $comp_instalado_ns = 'N/A';
+$comp_removido_np = $data['comp_removido_np'] ?? [];
+$comp_removido_ns = $data['comp_removido_ns'] ?? [];
+$comp_instalado_np = $data['comp_instalado_np'] ?? [];
+$comp_instalado_ns = $data['comp_instalado_ns'] ?? [];
+
+$c1_rem_np = 'N/A'; $c1_rem_ns = 'N/A';
+$c1_inst_np = 'N/A'; $c1_inst_ns = 'N/A';
+$c2_rem_np = null; $c2_rem_ns = null;
+$c2_inst_np = null; $c2_inst_ns = null;
+$componentes_adicionales = [];
+
+if ($componente_cambiado === 'Sí' && is_array($comp_removido_np)) {
+    foreach ($comp_removido_np as $index => $np_rem) {
+        $rem_np = trim((string)$np_rem);
+        $rem_ns = trim((string)($comp_removido_ns[$index] ?? 'N/A'));
+        $inst_np = trim((string)($comp_instalado_np[$index] ?? 'N/A'));
+        $inst_ns = trim((string)($comp_instalado_ns[$index] ?? 'N/A'));
+        
+        if ($rem_np === '') $rem_np = 'N/A';
+
+        if ($index === 0) {
+            $c1_rem_np = $rem_np;
+            $c1_rem_ns = $rem_ns;
+            $c1_inst_np = $inst_np;
+            $c1_inst_ns = $inst_ns;
+        } elseif ($index === 1) {
+            $c2_rem_np = $rem_np;
+            $c2_rem_ns = $rem_ns;
+            $c2_inst_np = $inst_np;
+            $c2_inst_ns = $inst_ns;
+        } else {
+            $componentes_adicionales[] = [
+                'removido_np' => $rem_np,
+                'removido_ns' => $rem_ns,
+                'instalado_np' => $inst_np,
+                'instalado_ns' => $inst_ns
+            ];
+        }
+    }
 }
+
+$json_adicionales = !empty($componentes_adicionales) ? json_encode($componentes_adicionales) : null;
 
 // Validación de campos mandatorios
 if (empty($modelo) || empty($matricula) || empty($ata) || empty($descripcion) || empty($accion_correctiva)) {
@@ -152,7 +184,12 @@ try {
                 comp_removido_np  = :comp_removido_np,
                 comp_removido_ns  = :comp_removido_ns,
                 comp_instalado_np = :comp_instalado_np,
-                comp_instalado_ns = :comp_instalado_ns
+                comp_instalado_ns = :comp_instalado_ns,
+                comp2_removido_np = :comp2_removido_np,
+                comp2_removido_ns = :comp2_removido_ns,
+                comp2_instalado_np = :comp2_instalado_np,
+                comp2_instalado_ns = :comp2_instalado_ns,
+                componentes_adicionales = :componentes_adicionales
             WHERE id_falla = :id_falla";
 
     $stmt = $pdo->prepare($sql);
@@ -174,10 +211,15 @@ try {
         ':ciclos'              => $ciclos,
         ':tiempo_atencion'     => $tiempo_atencion,
         ':componente_cambiado' => $componente_cambiado,
-        ':comp_removido_np'    => $comp_removido_np,
-        ':comp_removido_ns'    => $comp_removido_ns,
-        ':comp_instalado_np'   => $comp_instalado_np,
-        ':comp_instalado_ns'   => $comp_instalado_ns,
+        ':comp_removido_np'    => $c1_rem_np,
+        ':comp_removido_ns'    => $c1_rem_ns,
+        ':comp_instalado_np'   => $c1_inst_np,
+        ':comp_instalado_ns'   => $c1_inst_ns,
+        ':comp2_removido_np'   => !empty($c2_rem_np) ? $c2_rem_np : null,
+        ':comp2_removido_ns'   => !empty($c2_rem_ns) ? $c2_rem_ns : null,
+        ':comp2_instalado_np'  => !empty($c2_inst_np) ? $c2_inst_np : null,
+        ':comp2_instalado_ns'  => !empty($c2_inst_ns) ? $c2_inst_ns : null,
+        ':componentes_adicionales' => $json_adicionales,
         ':id_falla'            => $idFalla,
     ]);
 

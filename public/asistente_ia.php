@@ -136,8 +136,8 @@ $sessionStartTime = date('c');
 
         <!-- Botón para finalizar sesión y calificar -->
         <div style="text-align: center; margin-top: 20px;" id="rating-trigger-container">
-            <button class="btn" style="background-color: var(--secondary-color); color: white;" onclick="showRatingUI()">
-                <i class="fas fa-check-circle"></i> Finalizar Soporte y Calificar
+            <button class="btn" style="background-color: #c99700 !important; color: #ffffff !important; border: none; border-radius: 12px; padding: 12px 28px; font-weight: bold; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; cursor: pointer; box-shadow: 0 4px 12px rgba(201, 151, 0, 0.3); transition: all 0.3s ease;" onclick="showRatingUI()" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
+                <i class="fas fa-check-circle" style="margin-right: 8px;"></i> Finalizar Soporte y Calificar
             </button>
         </div>
 
@@ -145,12 +145,21 @@ $sessionStartTime = date('c');
         <div id="rating-ui" style="display: none; text-align: center; margin-top: 20px; background: white; padding: 20px; border-radius: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color);">
             <h3 style="margin-top: 0; color: var(--primary-color);">¿Cómo calificarías la asistencia de la IA en esta sesión?</h3>
             <div id="star-rating" style="font-size: 32px; color: #ccc; cursor: pointer;">
-                <i class="fas fa-star" data-rating="1" onclick="submitRating(1)" onmouseover="hoverStars(1)" onmouseout="resetStars()"></i>
-                <i class="fas fa-star" data-rating="2" onclick="submitRating(2)" onmouseover="hoverStars(2)" onmouseout="resetStars()"></i>
-                <i class="fas fa-star" data-rating="3" onclick="submitRating(3)" onmouseover="hoverStars(3)" onmouseout="resetStars()"></i>
-                <i class="fas fa-star" data-rating="4" onclick="submitRating(4)" onmouseover="hoverStars(4)" onmouseout="resetStars()"></i>
-                <i class="fas fa-star" data-rating="5" onclick="submitRating(5)" onmouseover="hoverStars(5)" onmouseout="resetStars()"></i>
+                <i class="fas fa-star" data-rating="1" onclick="selectRating(1)" onmouseover="hoverStars(1)" onmouseout="resetStars()"></i>
+                <i class="fas fa-star" data-rating="2" onclick="selectRating(2)" onmouseover="hoverStars(2)" onmouseout="resetStars()"></i>
+                <i class="fas fa-star" data-rating="3" onclick="selectRating(3)" onmouseover="hoverStars(3)" onmouseout="resetStars()"></i>
+                <i class="fas fa-star" data-rating="4" onclick="selectRating(4)" onmouseover="hoverStars(4)" onmouseout="resetStars()"></i>
+                <i class="fas fa-star" data-rating="5" onclick="selectRating(5)" onmouseover="hoverStars(5)" onmouseout="resetStars()"></i>
             </div>
+            
+            <div style="margin-top: 15px;">
+                <p style="margin-bottom: 5px; font-weight: bold; color: #5f6368; font-size: 14px;">Compártenos una observación (opcional)</p>
+                <textarea id="rating-observation" rows="3" style="width: 100%; max-width: 400px; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); font-family: 'Plus Jakarta Sans', sans-serif; resize: none;" placeholder="Escribe tu observación aquí..."></textarea>
+            </div>
+            <div style="margin-top: 15px;">
+                <button type="button" class="btn" style="background-color: var(--primary-color); color: white; padding: 10px 24px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer;" onclick="submitRating()">Enviar Calificación</button>
+            </div>
+
             <p id="rating-message" style="margin-top: 15px; font-weight: bold; color: var(--primary-color); display: none;"></p>
         </div>
 
@@ -252,9 +261,18 @@ $sessionStartTime = date('c');
             });
         }
 
-        function submitRating(rating) {
+        function selectRating(rating) {
             currentRating = rating;
-            resetStars(); // Fijar las estrellas
+            resetStars();
+        }
+
+        function submitRating() {
+            if (currentRating === 0) {
+                alert("Por favor, selecciona una calificación (estrellas) antes de enviar.");
+                return;
+            }
+
+            const observation = document.getElementById('rating-observation').value.trim();
 
             // Generar UUID
             const registroId = crypto.randomUUID ? crypto.randomUUID() : 'id-' + new Date().getTime() + '-' + Math.random().toString(36).substring(2, 9);
@@ -266,7 +284,8 @@ $sessionStartTime = date('c');
                 nombre_usuario: userName,
                 tiempo_inicio: sessionStartTime,
                 tiempo_fin: sessionEndTime,
-                calificacion_estrellas: currentRating
+                calificacion_estrellas: currentRating,
+                observacion: observation
             };
 
             fetch('webhook_metrics.php', {

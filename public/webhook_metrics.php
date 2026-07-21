@@ -38,17 +38,20 @@ try {
         nombre_usuario VARCHAR(100),
         tiempo_inicio DATETIME,
         tiempo_fin DATETIME,
-        calificacion_estrellas INT
+        calificacion_estrellas INT,
+        observacion TEXT
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
-    $stmt = $pdo->prepare("INSERT INTO ia_metrics_log (registro_id, correo_usuario, nombre_usuario, tiempo_inicio, tiempo_fin, calificacion_estrellas) VALUES (?, ?, ?, ?, ?, ?)");
+
+    $stmt = $pdo->prepare("INSERT INTO ia_metrics_log (registro_id, correo_usuario, nombre_usuario, tiempo_inicio, tiempo_fin, calificacion_estrellas, observacion) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $stmt->execute([
         $input['registro_id'],
         $input['correo_usuario'],
         $input['nombre_usuario'],
         $input['tiempo_inicio'],
         $input['tiempo_fin'],
-        (int)$input['calificacion_estrellas']
+        (int)$input['calificacion_estrellas'],
+        $input['observacion'] ?? null
     ]);
 
     echo json_encode(['status' => 'success', 'message' => 'Metrics saved successfully.']);
