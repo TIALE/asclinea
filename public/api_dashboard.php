@@ -247,7 +247,7 @@ try {
 
             // Consultar registros (incluyendo comp_removido_ns y matricula)
             $query = "
-                SELECT referencia, mel, comp_removido_np, comp_removido_ns, matricula
+                SELECT referencia, mel, comp_removido_np, comp_removido_ns, comp2_removido_np, comp2_removido_ns, componentes_adicionales, matricula
                 FROM tbo_Falla
                 WHERE modelo = :modelo AND ata = :ata {$dateClause}
             ";
@@ -262,32 +262,53 @@ try {
                     continue;
                 }
 
-                // Sumar frecuencia de comp_removido_np y comp_removido_ns únicamente
-                $npVal = trim((string)($row['comp_removido_np'] ?? ''));
-                $nsVal = trim((string)($row['comp_removido_ns'] ?? ''));
-
-                if ($npVal === '' || $npVal === 'N/A') {
-                    continue; // Saltar si no hay un N/P de removido válido
+                // Extraer todos los componentes removidos de este reporte
+                $comps = [];
+                $comps[] = ['np' => trim((string)($row['comp_removido_np'] ?? '')), 'ns' => trim((string)($row['comp_removido_ns'] ?? ''))];
+                $comps[] = ['np' => trim((string)($row['comp2_removido_np'] ?? '')), 'ns' => trim((string)($row['comp2_removido_ns'] ?? ''))];
+                
+                $adicionales = trim((string)($row['componentes_adicionales'] ?? ''));
+                if (!empty($adicionales)) {
+                    $jsonAdic = json_decode($adicionales, true);
+                    if (is_array($jsonAdic)) {
+                        foreach ($jsonAdic as $comp) {
+                            $comps[] = [
+                                'np' => trim((string)($comp['removido_np'] ?? '')),
+                                'ns' => trim((string)($comp['removido_ns'] ?? ''))
+                            ];
+                        }
+                    }
                 }
 
-                // Formatear etiqueta con N/P y S/N
-                $label = $npVal;
-                if ($nsVal !== '' && $nsVal !== 'N/A') {
-                    $label .= " (S/N: {$nsVal})";
-                }
-
-                if (!isset($componentes[$label])) {
-                    $componentes[$label] = [
-                        'np' => $npVal,
-                        'label' => $label,
-                        'qty' => 0,
-                        'matriculas' => []
-                    ];
-                }
-                $componentes[$label]['qty']++;
                 $mat = trim((string)($row['matricula'] ?? ''));
-                if ($mat !== '' && !in_array($mat, $componentes[$label]['matriculas'])) {
-                    $componentes[$label]['matriculas'][] = $mat;
+
+                foreach ($comps as $c) {
+                    $npVal = $c['np'];
+                    $nsVal = $c['ns'];
+
+                    if ($npVal === '' || $npVal === 'N/A') {
+                        continue; // Saltar si no hay un N/P de removido válido
+                    }
+
+                    // Formatear etiqueta con N/P y S/N
+                    $label = $npVal;
+                    if ($nsVal !== '' && $nsVal !== 'N/A') {
+                        $label .= " (S/N: {$nsVal})";
+                    }
+
+                    if (!isset($componentes[$label])) {
+                        $componentes[$label] = [
+                            'np' => $npVal,
+                            'label' => $label,
+                            'qty' => 0,
+                            'matriculas' => []
+                        ];
+                    }
+                    $componentes[$label]['qty']++;
+                    
+                    if ($mat !== '' && !in_array($mat, $componentes[$label]['matriculas'])) {
+                        $componentes[$label]['matriculas'][] = $mat;
+                    }
                 }
             }
 
@@ -325,8 +346,9 @@ try {
 
             // Si se pasa un N/P, filtrar por él
             if ($np !== '') {
-                $sql .= " AND (comp_instalado_np = :np OR comp_removido_np = :np)";
+                $sql .= " AND (comp_instalado_np = :np OR comp_removido_np = :np OR comp2_instalado_np = :np OR comp2_removido_np = :np OR componentes_adicionales LIKE :np_like)";
                 $bindParams[':np'] = $np;
+                $bindParams[':np_like'] = '%' . $np . '%';
             } elseif ($sub_ata !== '') {
                 // Si se pasa sub_ata, podemos pre-filtrar las filas en PHP
             }
@@ -419,8 +441,9 @@ try {
             ";
             $trendParams = [':modelo' => $modelo, ':ata' => $ata];
             if ($np !== '') {
-                $sqlTrend .= " AND (comp_instalado_np = :np OR comp_removido_np = :np)";
+                $sqlTrend .= " AND (comp_instalado_np = :np OR comp_removido_np = :np OR comp2_instalado_np = :np OR comp2_removido_np = :np OR componentes_adicionales LIKE :np_like)";
                 $trendParams[':np'] = $np;
+                $trendParams[':np_like'] = '%' . $np . '%';
             }
             $stmtTrend = $pdo->prepare($sqlTrend);
             $stmtTrend->execute($trendParams);
